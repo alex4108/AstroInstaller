@@ -8,5 +8,5 @@ deploy:
   file: install-astroneer-server.exe
   on:
     repo: alex4108/astroneer-server-deployment
-  name: "Version $TRAVIS_TAG"
+  name: Version $TRAVIS_TAG
   skip_cleanup: 'true'

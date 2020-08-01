@@ -2,6 +2,8 @@
 
 ![Astroneer Logo](https://astroneer.space/presskit/astroneer/images/header.png)
 
+[![Build Status](https://travis-ci.com/alex4108/astroneer-server-deployment.svg?branch=master)](https://travis-ci.com/alex4108/astroneer-server-deployment)
+
 This module lets you quickly deploy an [Astroneer Dedicated Server](https://blog.astroneer.space/p/astroneer-dedicated-server-details/)
 
 Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-schittko)
