@@ -11,16 +11,16 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 # How to use
 
 ## Easy Method
+  
+1. Download the `install-astroneer-server.zip` file from the latest release to the right :arrow_right:
+1. Extract the ZIP
+1. Run the `install-astroneer-server.exe` file as administrator
+1. Answer the prompts followed by ENTER
 
-**The Easy Method does not yet exist!**  
-
-1. Download the latest Release zip
-1. Extract the zip and run the EXE file on the system you want to install Astroneer on.
-1. Fill in the parameters as requested
-
-* Owner Steam Name: This is how your steam name is publicly visible to the world.
-* Max FPS: Set to 30 if you're unsure.  
-* 
+* `Owner Steam Name`: This is how your steam name is publicly visible to the world.
+* `Server Name`: This will be the name of your server
+* `Max FPS`: Set to 30 if you're unsure.  
+* `Server Password`: A server password if you wish, or just hit enter for no password.
 
 ## Advanced Method
 
@@ -38,8 +38,7 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 
 * `powershell.exe -executionpolicy bypass -file "install-astroneer-server.ps1" -ownerName "Guy" -serverName "Guys Lair" -serverPassword "Guy123" -maxFPS 60`
 
-# TODO
+# Credits
 
-1. Travis-CI to publish the powershell module using PS2EXE and GitHub Releases.  This will release the EASY method
-
-
+[MScholtes](https://github.com/MScholtes/PS2EXE)
+[hjorslev](https://github.com/hjorslev/SteamPS)
