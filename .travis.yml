@@ -2,7 +2,6 @@ os: windows
 language: bash
 script: 
   - powershell -ExecutionPolicy Unrestricted -File "build.ps1" "'"$TRAVIS_TAG"'"
-  - tar.exe -a -c -f install-astroneer-server.zip install-astroneer-server.exe
 deploy:
   provider: releases
   api_key:
