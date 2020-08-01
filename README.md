@@ -12,7 +12,7 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 
 ## Easy Method
   
-1. Download the `install-astroneer-server.zip` file from the latest release to the right :arrow_right:
+1. Download the `install-astroneer-server.zip` file from the [latest release](https://github.com/alex4108/astroneer-server-deployment/releases) 
 1. Extract the ZIP
 1. Run the `install-astroneer-server.exe` file as administrator
 1. Answer the prompts followed by ENTER
