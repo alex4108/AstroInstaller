@@ -1,7 +1,7 @@
-Param($ownerName, $serverName, [int]$maxFPS, $serverPassword)
+Param($ownerName, $serverName, $maxFPS, $serverPassword)
 #Param($ownerName, $serverName, [int]$maxFPS, $serverPassword, [switch]$installAsService)
 
-$version = "1.0.1"
+$version = "1.1.6"
 Write-Host "install-astroneer-server $version"
 
 while ( $ownerName -eq $null ) { 
@@ -28,7 +28,7 @@ while ( $maxFPS -eq $null ) {
 
 if ( $serverPassword -eq $null ) { 
     $serverPassword = Read-Host -Prompt "Enter Server Password or leave blank"
-    if (!$maxFPS) { 
+    if (!$serverPassword) { 
         Write-Warning -Message "Your server is starting without a password.  BEWARE."
     }
 }
