@@ -1,8 +1,8 @@
 Param($ownerName, $serverName, [int]$maxFPS, $serverPassword)
 #Param($ownerName, $serverName, [int]$maxFPS, $serverPassword, [switch]$installAsService)
 
-$version = "1.0.0"
-Write-Host "install-astroneer-server version $version"
+$version = "1.0.1"
+Write-Host "install-astroneer-server $version"
 
 while ( $ownerName -eq $null ) { 
     $ownerName = Read-Host -Prompt "Enter Admin's Steam Name "
