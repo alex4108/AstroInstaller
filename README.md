@@ -2,7 +2,12 @@
 
 ![Astroneer Logo](https://astroneer.space/presskit/astroneer/images/header.png)
 
+
 [![Build Status](https://travis-ci.com/alex4108/astroneer-server-deployment.svg?branch=master)](https://travis-ci.com/alex4108/astroneer-server-deployment)
+[![Supports Windows Server 2019][https://img.shields.io/badge/Windows-Server%202019-brightgreen]]
+[![Supports Windows 10][https://img.shields.io/badge/Windows-10-brightgreen]]
+[![Requires Powershell 5][https://img.shields.io/badge/Powershell-5-green]]
+[![Powershell 6+ Not Supported][https://img.shields.io/badge/Powershell-6+-red]]
 [![GitHub issues](https://img.shields.io/github/issues/alex4108/astroneer-server-deployment)](https://github.com/alex4108/astroneer-server-deployment/issues)
 [![GitHub forks](https://img.shields.io/github/forks/alex4108/astroneer-server-deployment)](https://github.com/alex4108/astroneer-server-deployment/network)
 [![GitHub stars](https://img.shields.io/github/stars/alex4108/astroneer-server-deployment)](https://github.com/alex4108/astroneer-server-deployment/stargazers)
@@ -44,13 +49,13 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 * `-maxFPS 60`
 * `-useGUI y` or `-useGUI n` to install [AstroLauncher](https://www.github.com/ricky-davis/AstroLauncher)
 * `-autoReboot y` _Optional_ _Default: n_ If set to y, the server will be rebooted automatically after installation if needed.  Otherwise, if a reboot is needed, the script will exit and the server will not be able to start until the reboot is complete.
-* `-exposeAstroLauncher y` _Optional_ _Default: n_ If set to y, a port forward for TCP 5000 will be created to expose AstroLauncher.  If the firewall is enabled, this will allow users with network access to the server to call AstroLauncher.  Note that AstroLauncher listens on 0.0.0.0, so if the firewall is disabled this will have no effect and AstroLauncher will still be exposed.
+* `-installPath "C:\SteamServers"` _Optional_ _Default: C:\SteamServers_ The path to install to **without trailing slash**
 
 #### Unattended installation
 
 By specifiying all required parameters you will be able to run the installation completely unattended.
 
-* `powershell.exe -executionpolicy bypass -file "install-astroneer-server.ps1" -ownerName "Guy" -serverName "Guys Lair" -serverPassword "Guy123" -maxFPS 60 -useGUI y -exposeAstroLauncher y`
+* `powershell.exe -executionpolicy bypass -file "install-astroneer-server.ps1" -ownerName "Guy" -serverName "Guys Lair" -serverPassword "Guy123" -maxFPS 60 -useGUI y`
 
 # Contributing
 
@@ -61,6 +66,12 @@ Contributions are what make the open source community such an amazing place to b
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+# Requirements
+
+This script has been tested on Windows Server 2019 and Windows 10 1909, both using Powershell 5.
+
+Powershell 6+ users will not be able to use this as it relies on the depricated `Invoke-WmiMethod -Class Win32_Process` class.
 
 # Credits
 
