@@ -7,6 +7,8 @@
 [![GitHub forks](https://img.shields.io/github/forks/alex4108/astroneer-server-deployment)](https://github.com/alex4108/astroneer-server-deployment/network)
 [![GitHub stars](https://img.shields.io/github/stars/alex4108/astroneer-server-deployment)](https://github.com/alex4108/astroneer-server-deployment/stargazers)
 [![GitHub license](https://img.shields.io/github/license/alex4108/astroneer-server-deployment)](https://github.com/alex4108/astroneer-server-deployment/blob/master/LICENSE)
+![GitHub All Releases](https://img.shields.io/github/downloads/alex4108/astroneer-server-deployment/total)
+![GitHub contributors](https://img.shields.io/github/contributors/alex4108/astroneer-server-deployment)
 
 This module lets you quickly deploy an [Astroneer Dedicated Server](https://blog.astroneer.space/p/astroneer-dedicated-server-details/)
 
