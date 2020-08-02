@@ -3,12 +3,10 @@
 ![Astroneer Logo](https://astroneer.space/presskit/astroneer/images/header.png)
 
 [![Build Status](https://travis-ci.com/alex4108/astroneer-server-deployment.svg?branch=master)](https://travis-ci.com/alex4108/astroneer-server-deployment)
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Downloads][downloads-shield]][downloads-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
+[![GitHub issues](https://img.shields.io/github/issues/alex4108/astroneer-server-deployment)](https://github.com/alex4108/astroneer-server-deployment/issues)
+[![GitHub forks](https://img.shields.io/github/forks/alex4108/astroneer-server-deployment)](https://github.com/alex4108/astroneer-server-deployment/network)
+[![GitHub stars](https://img.shields.io/github/stars/alex4108/astroneer-server-deployment)](https://github.com/alex4108/astroneer-server-deployment/stargazers)
+[![GitHub license](https://img.shields.io/github/license/alex4108/astroneer-server-deployment)](https://github.com/alex4108/astroneer-server-deployment/blob/master/LICENSE)
 
 This module lets you quickly deploy an [Astroneer Dedicated Server](https://blog.astroneer.space/p/astroneer-dedicated-server-details/)
 
