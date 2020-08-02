@@ -30,7 +30,7 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 #### Supported command line switches and examples
 
 * `-ownerName "The owner steam name"`
-* `-serverName "The server password"`
+* `-serverName "The server name"`
 * `-serverPassword "A Super Secure Password"`
 * `-maxFPS 60`
 
