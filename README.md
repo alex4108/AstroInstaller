@@ -16,9 +16,9 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 
 # How to use
 
-## Easy Method
+## Easy Method (5 minutes)
 
-  <iframe width=1280 height=720 frameborder="0" scrolling="no" src="https://screencast-o-matic.com/embed?sc=cYjnQCENUS&v=6&ff=1&title=0&controls=1" allowfullscreen="true"></iframe>
+[Watch the Video](https://screencast-o-matic.com/embed?sc=cYjnQCENUS&v=6&ff=1&title=0&controls=1)
 
 1. Download the `install-astroneer-server.zip` file from the [latest release](https://github.com/alex4108/astroneer-server-deployment/releases) 
 1. Extract the ZIP
@@ -47,6 +47,8 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 * `-exposeAstroLauncher y` _Optional_ _Default: n_ If set to y, a port forward for TCP 5000 will be created to expose AstroLauncher.  If the firewall is enabled, this will allow users with network access to the server to call AstroLauncher.  Note that AstroLauncher listens on 0.0.0.0, so if the firewall is disabled this will have no effect and AstroLauncher will still be exposed.
 
 #### Unattended installation
+
+By specifiying all required parameters you will be able to run the installation completely unattended.
 
 * `powershell.exe -executionpolicy bypass -file "install-astroneer-server.ps1" -ownerName "Guy" -serverName "Guys Lair" -serverPassword "Guy123" -maxFPS 60 -useGUI y -exposeAstroLauncher y`
 
