@@ -1,5 +1,5 @@
 Param($ownerName, $serverName, $maxFPS, $serverPassword)
-#Param($ownerName, $serverName, [int]$maxFPS, $serverPassword, [switch]$installAsService)
+#Param($ownerName, $serverName, $maxFPS, $serverPassword, [switch]$installAsService)
 
 #https://stackoverflow.com/questions/150161/waiting-for-user-input-with-a-timeout
 Function TimedPrompt($prompt,$secondsToWait){   
@@ -29,7 +29,7 @@ $version = "1.1.6"
 Write-Host "install-astroneer-server $version"
 
 while ( $ownerName -eq $null ) { 
-    $ownerName = Read-Host -Prompt "Enter Admin's Steam Name "
+    $ownerName = Read-Host -Prompt "Enter Owner's Steam Name "
     if (!$ownerName) { 
         Write-Warning -Message "No Steam Name Given.  Try again."
     }
