@@ -5,8 +5,10 @@
 * Run the EXE **Run the app despite the security warnings**
 * Fill out the initial config parameters
 
-[Read about AstroLauncher and why it's awesome](github.com/ricky-davis/AstroLauncher)
 [Watch the Setup Video]()
+
+[Read about AstroLauncher and why it's awesome](github.com/ricky-davis/AstroLauncher)
+
 
 ## Advanced Usage
 
@@ -16,7 +18,7 @@ Do you want to bootstrap a cloud instance?  Run an unattended installation?  Jus
 
 Having trouble installing?  You can [review the README](https://github.com/alex4108/astroneer-server-deployment/blob/master/README.md) or [create a bug report](https://github.com/alex4108/astroneer-server-deployment/issues/new/choose) 
 
-Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-schittko)
+Did I save you some time?  [Buy me a coffee](https://venmo.com/alex-schittko)
 
 ## A note about the security implications
 
