@@ -7,7 +7,7 @@
 
 [Watch the Setup Video]()
 
-[Read about AstroLauncher and why it's awesome](github.com/ricky-davis/AstroLauncher)
+[Read about AstroLauncher and why it's awesome](https://github.com/ricky-davis/AstroLauncher)
 
 
 ## Advanced Usage
