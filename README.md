@@ -17,8 +17,8 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 # How to use
 
 ## Easy Method
-  
-[Watch the video]()
+
+  <iframe width=1280 height=720 frameborder="0" scrolling="no" src="https://screencast-o-matic.com/embed?sc=cYjnQCENUS&v=6&ff=1&title=0&controls=1" allowfullscreen="true"></iframe>
 
 1. Download the `install-astroneer-server.zip` file from the [latest release](https://github.com/alex4108/astroneer-server-deployment/releases) 
 1. Extract the ZIP
