@@ -25,7 +25,7 @@ Function TimedPrompt($prompt,$secondsToWait){
 }
 
 
-$version = "1.1.6"
+$version = "1.1.9"
 Write-Host "install-astroneer-server $version"
 
 while ( $ownerName -eq $null ) { 
@@ -95,14 +95,13 @@ Update-SteamApp -AppID 728470 -Path "C:\SteamServers\Astrnoeer" -Force
 # Run Astro in background
 
 $configFile = "C:\SteamServers\astrnoeer\Astro\Saved\Config\WindowsServer\AstroServerSettings.ini"
+$engineFile = "C:\SteamServers\astrnoeer\Astro\Saved\Config\WindowsServer\Engine.ini"
 
 Write-Host "Running UE4 Prerequisite Setup"
-C:\SteamServers\astrnoeer\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe /q
-
-# So right here, it complained I needed to install a redistrib and the UE4 thingy made me open the GUI again with the /silent tag
+C:\SteamServers\astrnoeer\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe /silent
 
 Write-Host "Generating Astroneer Config Files"
-C:\SteamServers\astrnoeer\AstroServer.exe
+C:\SteamServers\astrnoeer\AstroServer.exe /q
 
 Write-Host "Sleeping until the config file shows up"
 while (!(Test-Path $configFile)) { 
@@ -125,9 +124,9 @@ Write-Host "Astro is dead!  Continuing..."
 Write-Host "Modifying Config File"
 
 # Two blank lines signifies the end of the config file.  So we need to remove them for now
-(Get-Content $configFIle) | ? {$_.trim() -ne "" } | Set-Content $configFile
+(Get-Content $configFile) | ? {$_.trim() -ne "" } | Set-Content $configFile
+(Get-Content $engineFile) | ? {$_.trim() -ne "" } | Set-Content $engineFile
 
-$configFile = "C:\SteamServers\astrnoeer\Astro\Saved\Config\WindowsServer\AstroServerSettings.ini"
 $publicIP = Invoke-RestMethod -Uri 'http://ifconfig.me/ip'
 
 Write-Host "Setting Public IP: $publicIP"
@@ -146,6 +145,11 @@ Write-Host "Setting Owner Name: $ownerName"
 Set-Content -Path $configFile -Value (get-content -Path $configFile | Select-String -Pattern "OwnerName=" -NotMatch)
 Add-Content $configFile "OwnerName=$ownerName"
 
+Write-Host "Setting Port: 8777"
+Set-Content -Path $configFile -Value (get-content -Path $configFile | Select-String -Pattern "[URL]" -NotMatch)
+Set-Content -Path $configFile -Value (get-content -Path $configFile | Select-String -Pattern "Port=*" -NotMatch)
+Add-Content $engineFile "`r`n`r`n[URL]`r`nPort=8777"
+
 if ( $serverPassword -eq $null) {     
     
 }
@@ -156,6 +160,7 @@ else {
 }
 # Put those two newlines back
 Add-Content $configFile "`r`n`r`n"
+Add-Content $engineFile "`r`n`r`n"
 
 if ($reboot -eq $true) { 
     TimedPrompt "Press any key to abort reboot. Reboot will occur in 60 seconds." 60
