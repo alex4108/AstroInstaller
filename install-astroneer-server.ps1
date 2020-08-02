@@ -1,6 +1,30 @@
 Param($ownerName, $serverName, $maxFPS, $serverPassword)
 #Param($ownerName, $serverName, [int]$maxFPS, $serverPassword, [switch]$installAsService)
 
+#https://stackoverflow.com/questions/150161/waiting-for-user-input-with-a-timeout
+Function TimedPrompt($prompt,$secondsToWait){   
+    Write-Host -NoNewline $prompt
+    $secondsCounter = 0
+    $subCounter = 0
+    While ( (!$host.ui.rawui.KeyAvailable) -and ($count -lt $secondsToWait) ){
+        start-sleep -m 10
+        $subCounter = $subCounter + 10
+        if($subCounter -eq 1000)
+        {
+            $secondsCounter++
+            $subCounter = 0
+            Write-Host -NoNewline "."
+        }       
+        If ($secondsCounter -eq $secondsToWait) { 
+            Write-Host "`r`n"
+            return $false;
+        }
+    }
+    Write-Host "`r`n"
+    return $true;
+}
+
+
 $version = "1.1.6"
 Write-Host "install-astroneer-server $version"
 
@@ -51,6 +75,7 @@ Write-Host "Server Password: [$serverPassword]"
 Write-Host "Installing DotNet Framework"
 $dotNetResult = Install-WindowsFeature Net-Framework-Core
 if (-not $dotNetResult.RestartNeeded -eq "No") {
+  Write-Warning -Message "A reboot will be required after this installation is complete before Astroneer Dedicated Server will be functional."
   $reboot = $true
 }
 else {
@@ -72,7 +97,9 @@ Update-SteamApp -AppID 728470 -Path "C:\SteamServers\Astrnoeer" -Force
 $configFile = "C:\SteamServers\astrnoeer\Astro\Saved\Config\WindowsServer\AstroServerSettings.ini"
 
 Write-Host "Running UE4 Prerequisite Setup"
-C:\SteamServers\astrnoeer\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe /silent
+C:\SteamServers\astrnoeer\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe /q
+
+# So right here, it complained I needed to install a redistrib and the UE4 thingy made me open the GUI again with the /silent tag
 
 Write-Host "Generating Astroneer Config Files"
 C:\SteamServers\astrnoeer\AstroServer.exe
@@ -80,6 +107,9 @@ C:\SteamServers\astrnoeer\AstroServer.exe
 Write-Host "Sleeping until the config file shows up"
 while (!(Test-Path $configFile)) { 
     Start-Sleep 10
+    # if astro server isn't running, try starting it
+    Wait-Process -Name "AstroServer.exe" -ErrorAction SilentlyContinue -TimeoutSec 30
+    C:\SteamServers\astrnoeer\AstroServer.exe        
 }
 
 Write-Host "Waiting for config file to populate"
@@ -128,8 +158,7 @@ else {
 Add-Content $configFile "`r`n`r`n"
 
 if ($reboot -eq $true) { 
-    Write-Host "Press Enter to complete required reboot.  Server will be rebooted immediately after pressing enter!"
-    Read-Host "Press ENTER to Reboot!"
+    TimedPrompt "Press any key to abort reboot. Reboot will occur in 60 seconds." 60
     shutdown /r /t 01
 }
 else {
