@@ -4,10 +4,10 @@
 
 
 [![Build Status](https://travis-ci.com/alex4108/astroneer-server-deployment.svg?branch=master)](https://travis-ci.com/alex4108/astroneer-server-deployment)
-![Supports Windows Server 2019][https://img.shields.io/badge/Windows-Server%202019-brightgreen]
-![Supports Windows 10][https://img.shields.io/badge/Windows-10-brightgreen]
-![Requires Powershell 5][https://img.shields.io/badge/Powershell-5-green]
-![Powershell 6+ Not Supported][https://img.shields.io/badge/Powershell-6+-red]
+![Supports Windows Server 2019](https://img.shields.io/badge/Windows-Server%202019-brightgreen)
+![Supports Windows 10](https://img.shields.io/badge/Windows-10-brightgreen)
+![Requires Powershell 5](https://img.shields.io/badge/Powershell-5-green)
+![Powershell 6+ Not Supported](https://img.shields.io/badge/Powershell-6+-red)
 [![GitHub issues](https://img.shields.io/github/issues/alex4108/astroneer-server-deployment)](https://github.com/alex4108/astroneer-server-deployment/issues)
 [![GitHub forks](https://img.shields.io/github/forks/alex4108/astroneer-server-deployment)](https://github.com/alex4108/astroneer-server-deployment/network)
 [![GitHub stars](https://img.shields.io/github/stars/alex4108/astroneer-server-deployment)](https://github.com/alex4108/astroneer-server-deployment/stargazers)
