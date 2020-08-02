@@ -1,37 +1,23 @@
-## Welcome to GitHub Pages
+## Installation
 
-You can use the [editor on GitHub](https://github.com/alex4108/astroneer-server-deployment/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+* [Download the ZIP from the latest release](https://github.com/alex4108/astroneer-server-deployment/releases/latest/)
+* Extract the file from the ZIP
+* Run the EXE **Run the app despite the security warnings**
+* Fill out the initial config parameters
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+[Read about AstroLauncher and why it's awesome](github.com/ricky-davis/AstroLauncher)
+[Watch the Setup Video]()
 
-### Markdown
+## Advanced Usage
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+Do you want to bootstrap a cloud instance?  Run an unattended installation?  Just don't feel like typing in the parameters?  [Check out the README](https://github.com/alex4108/astroneer-server-deployment/blob/master/README.md) for details on command-line interface usage.
 
-```markdown
-Syntax highlighted code block
+## Support 
 
-# Header 1
-## Header 2
-### Header 3
+Having trouble installing?  You can [review the README](https://github.com/alex4108/astroneer-server-deployment/blob/master/README.md) or [create a bug report](https://github.com/alex4108/astroneer-server-deployment/issues/new/choose) 
 
-- Bulleted
-- List
+Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-schittko)
 
-1. Numbered
-2. List
+## A note about the security implications
 
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/alex4108/astroneer-server-deployment/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+This is an open source project using TravisCI to create the build.  All modules used in this project, with the exception of Astroneer itself, are open source and available on their respective repositories.  The security warning is because the EXE generated is not signed, but can be ignored as all the code leading up to that EXE is available for your review.
