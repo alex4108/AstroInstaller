@@ -1,9 +1,9 @@
-Param($ownerName, $serverName, $maxFPS, $serverPassword, $useGUI, $autoReboot)
+Param($ownerName, $serverName, $maxFPS, $serverPassword, $useGUI, $autoReboot, $exposeAstroLauncher)
 Start-Transcript -Path "$PSScriptRoot\install-astroneer-server.log" -Append
 #Param($ownerName, $serverName, $maxFPS, $serverPassword, [switch]$installAsService)
 
 
-$version = "2.0"
+$version = "2.0.0"
 Write-Host "install-astroneer-server $version"
 
 while ( $null -eq $ownerName -or $ownerName -eq "" ) { 
@@ -58,6 +58,15 @@ else {
     $autoReboot = $false
 }
 
+if ($exposeAstroLauncher -eq 'y') { 
+    $exposeAstroLauncher = $true
+}
+else {
+    $exposeAstroLauncher = $false
+}
+
+
+
 #while ( $installAsService -eq $null ) {
 #    $installAsService = $true
 #    Write-Host 
@@ -75,7 +84,6 @@ Write-Host "AstroLauncher GUI: [$useGUI]"
 
 Write-Host "Installing DotNet Framework"
 $dotNetResult = Install-WindowsFeature Net-Framework-Core
-Write-Host $dotNetResult.RestartNeeded
 if ($dotNetResult.RestartNeeded -ne "No") {
   Write-Warning -Message "A reboot will be required before Astroneer Dedicated Server will be functional."
   $reboot = $true
@@ -98,51 +106,32 @@ $configFile = "C:\SteamServers\Astroneer\Astro\Saved\Config\WindowsServer\AstroS
 $engineFile = "C:\SteamServers\Astroneer\Astro\Saved\Config\WindowsServer\Engine.ini"
 
 Write-Host "Running Unreal Engine 4 Prerequisite Setup"
-C:\SteamServers\Astroneer\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe /quiet
-Wait-Process -Name "msiexec" -ErrorAction SilentlyContinue # Wait for the install to finish
+# So even though we instal the prereq's, AstroServer is totally unaware.
+C:\SteamServers\Astroneer\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe /uninstall /passive | Get-Process
+C:\SteamServers\Astroneer\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe /install /passive | Get-Process
 
-
-Write-Host "Generating Astroneer Config Files"
-Write-Warning "A warning will flash - it is safe to ignore."
-C:\SteamServers\Astroneer\AstroServer.exe /q
-Start-Sleep 5
-# Kill the Astro Setup as UE is already ready
-$astroSetup = Get-Process "AstroServer" -ErrorAction SilentlyContinue
-if ($astroSetup) {
-  $astroSetup.CloseMainWindow()
-  Start-Sleep 5
-  if (!$astroSetup.HasExited) {
-    $astroSetup | Stop-Process -Force
-  }
-}
-
-# Kill the UE4 Setup as we already did it
-$ue4Setup = Get-Process "UE4PrereqSetup_x64" -ErrorAction SilentlyContinue
-if ($ue4Setup) {
-  $ue4Setup.CloseMainWindow()
-  Start-Sleep 5
-  if (!$ue4Setup.HasExited) {
-    $ue4Setup | Stop-Process -Force
-  }
-}
-
-C:\SteamServers\Astroneer\AstroServer.exe /q
+# So now we need to start AstroServer.  It won't generate config files, it will ask to install dependencies that are ALREADY PRESENT.
+Write-Warning "Getting AstroServer ready..."
+# This one silences a popup for dependncies that are already installed
+$proc = Start-Process -filePath "C:\SteamServers\Astroneer\AstroServer.exe" -WorkingDirectory "C:\SteamServers\Astroneer\" -PassThru
+$proc | Wait-Process -Timeout 30 -ErrorAction SilentlyContinue 
+# This one lets astro generate the config files
+$proc = Start-Process -filePath "C:\SteamServers\Astroneer\AstroServer.exe" -WorkingDirectory "C:\SteamServers\Astroneer\" -PassThru
+$proc | Wait-Process -ErrorAction SilentlyContinue 
 
 Write-Host "Sleeping until the config file shows up"
 while (!(Test-Path $configFile)) { 
     Start-Sleep 10
+    Write-Host "."
 }
+Write-Host "Config File Exists!"
 
 Write-Host "Waiting for config file to populate"
-if ( (get-childitem $configFile).length -eq 0 ) {
+while ( (get-childitem $configFile).length -eq 10 ) {
     Start-Sleep 10
+    Write-Host "."
 }
-
-Write-Host "Waiting for Astro to die"
-Wait-Process -Name "AstroServer" -ErrorAction SilentlyContinue
-Write-Host "Astro is dead!  Continuing..."
-# Astro is dead by now
-
+Write-Host "Config file has data!"
 Write-Host "Modifying Config File"
 
 # Two blank lines signifies the end of the config file.  So we need to remove them for now
@@ -150,7 +139,6 @@ Write-Host "Modifying Config File"
 (Get-Content $engineFile) | ? {$_.trim() -ne "" } | Set-Content $engineFile
 
 $publicIP = Invoke-RestMethod -Uri 'http://ifconfig.me/ip'
-
 Write-Host "Setting Public IP: $publicIP"
 Set-Content -Path $configFile -Value (get-content -Path $configFile | Select-String -Pattern "PublicIP=" -NotMatch)
 Add-Content $configFile "PublicIP=$publicIP"
@@ -171,6 +159,7 @@ Write-Host "Setting Port: 8777"
 Set-Content -Path $engineFile -Value (get-content -Path $engineFile | Select-String -Pattern "[URL]" -NotMatch)
 Set-Content -Path $engineFile -Value (get-content -Path $engineFile | Select-String -Pattern "Port=*" -NotMatch)
 Add-Content $engineFile "`r`n`r`n[URL]`r`nPort=8777"
+
 
 if ( $serverPassword -eq $null) {     
     
@@ -217,13 +206,18 @@ if ($reboot -eq $true) {
     
 }
 else {
-    Write-Host "Starting Astro Server.  Have fun!"
+    Write-Host "Starting AstroServer.  Have fun!"
     if ($useGUI -eq $true) {
         Write-Host "Adding Firewall Exception for AstroLauncher TCP 5000"
-        netsh advfirewall firewall add rule name="AstroLauncher" dir=in action=allow protocol=TCP localport=5000
         $WmiProcess = Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList "C:\SteamServers\Astroneer\AstroLauncher.exe -p C:\SteamServers\Astroneer\"
-        $localIP = Test-Connection -ComputerName (hostname) -Count 1  | Select IPV4Address
-        Write-Host "AstroLauncher should be available at http://$localIP`:5000"
+        if ($exposeAstroLauncher) {
+            netsh advfirewall firewall add rule name="AstroLauncher" dir=in action=allow protocol=TCP localport=5000
+            $localIP = (Test-Connection -ComputerName (hostname) -Count 1).IPV4Address
+            Write-Host "AstroLauncher should be available at http://$localIP`:5000"
+        } 
+        else {
+            Write-Host "Astroneer should be available at http://localhost:5000"
+        }
     }
     else {
         Write-Host "If you need to make changes to the config file, ensure you kill the server first!"

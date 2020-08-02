@@ -18,6 +18,8 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 
 ## Easy Method
   
+[Watch the video]()
+
 1. Download the `install-astroneer-server.zip` file from the [latest release](https://github.com/alex4108/astroneer-server-deployment/releases) 
 1. Extract the ZIP
 1. Run the `install-astroneer-server.exe` file as administrator
@@ -41,11 +43,12 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 * `-serverPassword "A Super Secure Password"`
 * `-maxFPS 60`
 * `-useGUI y` or `-useGUI n` to install [AstroLauncher](https://www.github.com/ricky-davis/AstroLauncher)
-* `-autoReboot y` _Optional_ If set to y, the server will be rebooted automatically after installation if needed.  Otherwise, if a reboot is needed, the script will exit and the server will not be able to start until the reboot is complete.
+* `-autoReboot y` _Optional_ _Default: n_ If set to y, the server will be rebooted automatically after installation if needed.  Otherwise, if a reboot is needed, the script will exit and the server will not be able to start until the reboot is complete.
+* `-exposeAstroLauncher y` _Optional_ _Default: n_ If set to y, a port forward for TCP 5000 will be created to expose AstroLauncher.  If the firewall is enabled, this will allow users with network access to the server to call AstroLauncher.  Note that AstroLauncher listens on 0.0.0.0, so if the firewall is disabled this will have no effect and AstroLauncher will still be exposed.
 
 #### Unattended installation
 
-* `powershell.exe -executionpolicy bypass -file "install-astroneer-server.ps1" -ownerName "Guy" -serverName "Guys Lair" -serverPassword "Guy123" -maxFPS 60 -useGUI y`
+* `powershell.exe -executionpolicy bypass -file "install-astroneer-server.ps1" -ownerName "Guy" -serverName "Guys Lair" -serverPassword "Guy123" -maxFPS 60 -useGUI y -exposeAstroLauncher y`
 
 # Contributing
 
