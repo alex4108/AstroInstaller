@@ -217,8 +217,7 @@ if ($useGUI -eq $true) {
     $iwrResponse = Invoke-WebRequest -Uri $downloadUri -OutFile "$installPath\Astroneer\AstroLauncher.exe" -PassThru
 }
 
-Write-Host "Adding Firewall Exceptions for port 8777"
-netsh advfirewall firewall add rule name="AstroServer" dir=in action=allow protocol=TCP localport=8777
+Write-Host "Adding Firewall Exceptions for port 8777 UDP"
 netsh advfirewall firewall add rule name="AstroServer" dir=in action=allow protocol=UDP localport=8777
 
 if ($reboot -eq $true) {
