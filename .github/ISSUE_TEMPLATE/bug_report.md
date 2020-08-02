@@ -31,5 +31,6 @@ https://plnkr.co or similar (you can use this template as a starting point: http
   
   - Version: 1.0.0
   - Operating System: [Windows Server XXXX | Windows 10 ]
-
+  - [ ] install-astroneer-server.log is attached
+  
 * **Other information** (e.g. detailed explanation, stacktraces, related issues, suggestions how to fix, links for us to have context, eg. stackoverflow, gitter, etc)

@@ -1,4 +1,5 @@
 Param($ownerName, $serverName, $maxFPS, $serverPassword)
+Start-Transcript -Path $PSScriptRoot
 #Param($ownerName, $serverName, $maxFPS, $serverPassword, [switch]$installAsService)
 
 #https://stackoverflow.com/questions/150161/waiting-for-user-input-with-a-timeout
@@ -74,7 +75,7 @@ Write-Host "Server Password: [$serverPassword]"
 
 Write-Host "Installing DotNet Framework"
 $dotNetResult = Install-WindowsFeature Net-Framework-Core
-if (-not $dotNetResult.RestartNeeded -eq "No") {
+if ($dotNetResult.RestartNeeded -eq "Yes") {
   Write-Warning -Message "A reboot will be required after this installation is complete before Astroneer Dedicated Server will be functional."
   $reboot = $true
 }
@@ -91,14 +92,12 @@ $steamCMDResult = Install-SteamCMD -Force
 Write-Host "Installing ASTRONEER Dedicated Server"
 mkdir C:\SteamServers\
 Update-SteamApp -AppID 728470 -Path "C:\SteamServers\Astrnoeer" -Force
-#rm "C:\SteamServers\Astroneer\Astro\Saved\Config\Windows Server\AstroServerSettings.ini"
-# Run Astro in background
 
 $configFile = "C:\SteamServers\astrnoeer\Astro\Saved\Config\WindowsServer\AstroServerSettings.ini"
 $engineFile = "C:\SteamServers\astrnoeer\Astro\Saved\Config\WindowsServer\Engine.ini"
 
 Write-Host "Running UE4 Prerequisite Setup"
-C:\SteamServers\astrnoeer\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe /silent
+C:\SteamServers\astrnoeer\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe /q
 
 Write-Host "Generating Astroneer Config Files"
 C:\SteamServers\astrnoeer\AstroServer.exe /q
@@ -106,9 +105,6 @@ C:\SteamServers\astrnoeer\AstroServer.exe /q
 Write-Host "Sleeping until the config file shows up"
 while (!(Test-Path $configFile)) { 
     Start-Sleep 10
-    # if astro server isn't running, try starting it
-    Wait-Process -Name "AstroServer.exe" -ErrorAction SilentlyContinue -TimeoutSec 30
-    C:\SteamServers\astrnoeer\AstroServer.exe        
 }
 
 Write-Host "Waiting for config file to populate"
@@ -171,3 +167,4 @@ else {
     Write-Host "If you need to make changes to the config file, ensure you kill the server first!"
     $WmiProcess = Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList "C:\SteamServers\astrnoeer\AstroServer.exe"
 }
+Stop-Transcript
