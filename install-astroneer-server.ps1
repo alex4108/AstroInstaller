@@ -1,10 +1,10 @@
 Param($ownerName, $serverName, $maxFPS, $serverPassword, $useGUI, $autoReboot, $installPath)
-Start-Transcript -Path "$PSScriptRoot\install-astroneer-server.log" -Append
+Start-Transcript -Path "$PSScriptRoot\AstroInstaller.log" -Append
 #Param($ownerName, $serverName, $maxFPS, $serverPassword, [switch]$installAsService)
 
 
-$version = "2.1.0"
-Write-Host "install-astroneer-server $version"
+$version = "2.1.2"
+Write-Host "AstroInstaller $version"
 
 # Detect Windows Server or Windows 10 
 $edition = (Get-WindowsEdition -Online).Edition
