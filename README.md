@@ -3,17 +3,17 @@
 ![Astroneer Logo](https://astroneer.space/presskit/astroneer/images/header.png)
 
 
-[![Build Status](https://travis-ci.com/alex4108/astroneer-server-deployment.svg?branch=master)](https://travis-ci.com/alex4108/astroneer-server-deployment)
+[![Build Status](https://travis-ci.com/alex4108/AstroInstaller.svg?branch=master)](https://travis-ci.com/alex4108/AstroInstaller)
 ![Supports Windows Server 2019](https://img.shields.io/badge/Windows-Server%202019-brightgreen)
 ![Supports Windows 10](https://img.shields.io/badge/Windows-10-brightgreen)
 ![Requires Powershell 5](https://img.shields.io/badge/Powershell-5-green)
 ![Powershell 6+ Not Supported](https://img.shields.io/badge/Powershell-6+-red)
-[![GitHub issues](https://img.shields.io/github/issues/alex4108/astroneer-server-deployment)](https://github.com/alex4108/astroneer-server-deployment/issues)
-[![GitHub forks](https://img.shields.io/github/forks/alex4108/astroneer-server-deployment)](https://github.com/alex4108/astroneer-server-deployment/network)
-[![GitHub stars](https://img.shields.io/github/stars/alex4108/astroneer-server-deployment)](https://github.com/alex4108/astroneer-server-deployment/stargazers)
-[![GitHub license](https://img.shields.io/github/license/alex4108/astroneer-server-deployment)](https://github.com/alex4108/astroneer-server-deployment/blob/master/LICENSE)
-![GitHub All Releases](https://img.shields.io/github/downloads/alex4108/astroneer-server-deployment/total)
-![GitHub contributors](https://img.shields.io/github/contributors/alex4108/astroneer-server-deployment)
+[![GitHub issues](https://img.shields.io/github/issues/alex4108/AstroInstaller)](https://github.com/alex4108/AstroInstaller/issues)
+[![GitHub forks](https://img.shields.io/github/forks/alex4108/AstroInstaller)](https://github.com/alex4108/AstroInstaller/network)
+[![GitHub stars](https://img.shields.io/github/stars/alex4108/AstroInstaller)](https://github.com/alex4108/AstroInstaller/stargazers)
+[![GitHub license](https://img.shields.io/github/license/alex4108/AstroInstaller)](https://github.com/alex4108/AstroInstaller/blob/master/LICENSE)
+![GitHub All Releases](https://img.shields.io/github/downloads/alex4108/AstroInstaller/total)
+![GitHub contributors](https://img.shields.io/github/contributors/alex4108/AstroInstaller)
 
 This module lets you quickly deploy an [Astroneer Dedicated Server](https://blog.astroneer.space/p/astroneer-dedicated-server-details/)
 
@@ -25,7 +25,7 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 
 [Watch the Video](https://screencast-o-matic.com/embed?sc=cYjnQCENUS&v=6&ff=1&title=0&controls=1)
 
-1. Download the `install-astroneer-server.zip` file from the [latest release](https://github.com/alex4108/astroneer-server-deployment/releases) 
+1. Download the `install-astroneer-server.zip` file from the [latest release](https://github.com/alex4108/AstroInstaller/releases) 
 1. Extract the ZIP
 1. Run the `install-astroneer-server.exe` file as administrator
 1. Answer the prompts followed by ENTER

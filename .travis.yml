@@ -6,10 +6,10 @@ deploy:
   provider: releases
   api_key:
     secure: V5x98VMfNtwhFInoWI5QlwxgIng7qATS8qkpwDPYG66F2IzyuXL5C6E39HRxpcGw0mDh9gVaiDoqH6uKmeGBbLPlfFpSAiORpwTRMZjlT/OJuBrJ+kHr7euUFTp/Y/XZ4kC8Eg0JU3CxrTe6tFnFqb++ypfkqfRDzSlBef4fawNcD8v8IiYtgXoYF9Yffrpl77FMTPHF01CDuVBFQ2YQkrTOJcW8n/7QcgzJ9tJyMvnVCXVb9P99GNxsTh8D2iNDAMuFop0RN2UG9A494oOdn9RQHSMBX0ZoPDmTmTNasXK4YLYlCCYNK8ib/P2FFDTyYvoXltKfouxIyng8zLhRmYAzDrSItAPM6achPtn81PPI/xJ3xvtKmtt/p6ZRQis5UOhn4VpDGMPg3hdA0p8kJm7//bH6TZh8tbWD/5OAKfONX4wermpONuEKA8e41yXppQ5/O/aqvawSkOZFoy65zjI5X1Y6WNWCsciWmfrfyDzK1aYz47glQe5jwBNw5nZm+t6Zq1ZtawwuXsIOl/orqo++GdApX16WtLilgj3LzRFnhB3wCzRqex5Gmjg0LDVjUcLNH1Y0yLoqV5ezo0G7frVKhYXgpntG5YmEOU4eehPB1QP+ZoR9VilhlQFdIafnQPLk1MqLszEh+s/twPm8GtDBVH1U/HOejD+epzXQgko=
-  file: install-astroneer-server.zip
+  file: AstroInstaller.zip
   on:
     tags: true
-    repo: alex4108/astroneer-server-deployment
+    repo: alex4108/AstroInstaller
   name: Version $TRAVIS_TAG
-  body: Download the install-astroneer-server.zip to use the Easy installer, or the Source Code to use the Advanced installer.
+  body: Download the AstroInstaller.zip to use the Easy installer, or the Source Code to use the Advanced installer.
   skip_cleanup: 'true'
