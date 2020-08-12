@@ -214,7 +214,7 @@ if ($useGUI -eq $true) {
     $filename = "AstroLauncher.exe"
     $releasesUri = "https://api.github.com/repos/$repo/releases/latest"
     $downloadUri = ((Invoke-RestMethod -Method GET -Uri $releasesUri).assets | Where-Object name -like $filename ).browser_download_url
-    $iwrResponse = Invoke-WebRequest -Uri $downloadUri -OutFile "$installPath\Astroneer\AstroLauncher.exe" -PassThru
+    $iwrResponse = Invoke-WebRequest -Uri $downloadUri -OutFile "$installPath\Astroneer\AstroLauncher.exe" -PassThru -UseBasicParsing
 }
 
 Write-Host "Adding Firewall Exceptions for port 8777 UDP"
