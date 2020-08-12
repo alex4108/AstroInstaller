@@ -115,8 +115,8 @@ if ( $windowsServer -eq $true ) {
 }
 
 Write-Host "Installing SteamCMD"
+$nuGetResult = Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 $registerPSResult = Register-PSRepository -Default -ErrorAction SilentlyContinue
-$nuGetResult = Install-PackageProvider NuGet -Force
 Set-PSRepository PSGallery -InstallationPolicy Trusted
 $steamPSResult = Install-Module -Name SteamPS
 $steamCMDResult = Install-SteamCMD -Force
