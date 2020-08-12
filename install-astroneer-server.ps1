@@ -1,10 +1,59 @@
-Param($ownerName, $serverName, $maxFPS, $serverPassword, $useGUI, $autoReboot, $installPath)
-Start-Transcript -Path "$PSScriptRoot\AstroInstaller.log" -Append
-#Param($ownerName, $serverName, $maxFPS, $serverPassword, [switch]$installAsService)
+<#
+.Synopsis
+Deploys an application from current folder to kubernetes cluster.
+.Description
+https://github.com/alex4108/AstroInstaller
+.Parameter ownerName
+Astroneer server owner steam name
+.Parameter serverName
+Astroneer server name
+.Parameter serverPort
+Astroneer server UDP port. Default is 8777
+.Parameter maxFPS
+Maximum server FPS. Default is 30
+.Parameter serverPassword
+Server password. If ownerName, or sereverName or serverPasswords are not provided
+on the command line, the script will ask for them interactively
+.Parameter noServerPassword
+Suppress password prompt if no server password was provided. Use it to run in 
+non-interactive mode.
+.Parameter noAstroLauncher
+Disables use of AstroLauncher (not recommened)
+.Parameter autoReboot
+If depency installation requires a reboot, the script will automaticaly reboot the machine
+.Parameter installPath
+Path where to install steam applications. Defaults to "C:\SteamServers"
+.Parameter noWait
+Suppress 2 minutes wait after script finishes. Use it to run in non-interactive mode.
+.Link
+https://github.com/alex4108/AstroInstaller
+#>
+param(
+  [string]$ownerName,
+  [string]$serverName,
+  [int]$serverPort = 8777,
+  [string]$serverPassword,
+  [switch]$noServerPassword,
+  [string]$installPath = "C:\SteamServers",
+  [int]$maxFPS = 30,
+  [switch]$noAstroLauncher,
+  [switch]$autoReboot,
+  [switch]$noWait
+)
+#Requires -RunAsAdministrator
 
+$ErrorActionPreference = "Stop"
+Start-Transcript -Path "$PSScriptRoot\AstroInstaller.log" -Append
 
 $version = "2.1.3"
 Write-Host "AstroInstaller $version"
+
+# This is to workaround an issue with older .NET Framework where powershell cannot download Nuget provider because of the newer TLS cipher suits
+if ($PSVersionTable.PSVersion.Major -lt 6) {
+
+    Set-ItemProperty -Path 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NetFramework\v4.0.30319' -Name 'SchUseStrongCrypto' -Value '1' -Type DWord
+    Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\.NetFramework\v4.0.30319' -Name 'SchUseStrongCrypto' -Value '1' -Type DWord
+}
 
 # Detect Windows Server or Windows 10 
 $edition = (Get-WindowsEdition -Online).Edition
@@ -17,14 +66,14 @@ Write-Host "OS: [$edition]"
 Write-Host "IsWindowsServer: [$windowsServer]"
 
 
-while ( $null -eq $ownerName -or $ownerName -eq "" ) { 
+while ( !$ownerName ) { 
     $ownerName = Read-Host -Prompt "Enter Owner's Steam Name"
     if ($null -eq $ownerName -or $ownerName -eq "") { 
         Write-Warning -Message "No Steam Name Given.  Try again."
     }
 }
 
-while ( $null -eq $serverName ) { 
+while ( !$serverName ) { 
     $serverName = Read-Host -Prompt "Enter Server Name"
     if (!$serverName) { 
         Write-Warning -Message "No Server Name Given.  Try again."
@@ -32,65 +81,21 @@ while ( $null -eq $serverName ) {
     }
 }
 
-while ( $null -eq $maxFPS ) { 
-    $maxFPS = Read-Host -Prompt "Enter Server Max FPS"
-    if (!$maxFPS) { 
-        Write-Warning -Message "No Max FPS Given Given.  Use 30 if you're unsure."
-        $maxFPS = $null
-    }
+if ( !$noServerPassword -and !$serverPassword ) { 
+    $serverPasswordSecure = Read-Host -Prompt "Enter Server Password or leave blank" -AsSecureString
+    $serverPassword = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($serverPasswordSecure))
 }
 
-if ( $null -eq $serverPassword ) { 
-    $serverPassword = Read-Host -Prompt "Enter Server Password or leave blank"
-    if (!$serverPassword) { 
-        Write-Warning -Message "Your server is starting without a password.  BEWARE."
-    }
+if (!$serverPassword) { 
+    Write-Warning -Message "Your server is starting without a password.  BEWARE."
 }
 
-while ( $useGUI -ne 'y' -and $useGUI -ne 'n' ) { 
-    $useGUI = Read-Host -Prompt "Use AstroLauncher GUI for Management (RECOMMENDED) [y/n]"
-    if ($useGUI -eq 'y') { 
-        $useGUI = $true
-        break
-    }
-    elseif ($useGUI -eq 'n') { 
-        $useGUI = $false
-        break
-    }
-    else {
-        Write-Warning -Message "Enter y or n"
-    }
-}
-
-
-if ($useGUI -eq 'y') { 
-    $useGUI = $true
-}
-
-if ($autoReboot -eq 'y') { 
-    $autoReboot = $true
-}
-else {
-    $autoReboot = $false
-}
-
-
-if ($installPath -eq $null) { 
-    $installPath = "C:\SteamServers"
-}
-
-#while ( $installAsService -eq $null ) {
-#    $installAsService = $true
-#    Write-Host 
-#    $service = Read-Host -Prompt "Would you like to install Astroneer as an Always-On Service? [Y/n]"
-#    if ($service -eq "Y" -or $service -eq "y" -or $service -eq "") { 
-#        Write-Host "Okay, installing as a service"
-#        http://nssm.cc/release/nssm-2.24.zip 
-#}
+$useGUI = !$noAstroLauncher
     
 Write-Host "ASTRO CONFIG"
 Write-Host "Owner Name: [$ownerName]"
 Write-Host "Server Name: [$serverName]"
+Write-Host "Server Port: [$serverPort]"
 Write-Host "Max FPS: [$maxFPS]"
 Write-Host "AstroLauncher GUI: [$useGUI]"
 
@@ -104,7 +109,6 @@ if ( $windowsServer -eq $true ) {
         $reboot = $false
     }
 } else {
-    
     $dotNetResult = Enable-WindowsOptionalFeature -Online -FeatureName "NetFx3"
     if ($dotNetResult.RestartNeeded -eq $true) {
         Write-Warning -Message "A reboot will be required before Astroneer Dedicated Server will be functional."
@@ -115,14 +119,15 @@ if ( $windowsServer -eq $true ) {
 }
 
 Write-Host "Installing SteamCMD"
-$nuGetResult = Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-$registerPSResult = Register-PSRepository -Default -ErrorAction SilentlyContinue
+netsh advfirewall firewall add rule name="AstroServer" dir=in action=allow program="$installPath\SteamCMD\steamcmd.exe" | Out-Null
+# Invoking in a separate process so that .NET configuration changes at the top could be picked up
+$nuGetResult = powershell -command "Install-PackageProvider NuGet -Force"
 Set-PSRepository PSGallery -InstallationPolicy Trusted
 $steamPSResult = Install-Module -Name SteamPS
-$steamCMDResult = Install-SteamCMD -Force
+$steamCMDResult = Install-SteamCMD -InstallPath $installPath -Force
 
 Write-Host "Installing ASTRONEER Dedicated Server"
-mkdir $installPath
+mkdir $installPath -Force | Out-Null
 Update-SteamApp -AppID 728470 -Path "$installPath\Astroneer" -Force
 
 $configFile = "$installPath\Astroneer\Astro\Saved\Config\WindowsServer\AstroServerSettings.ini"
@@ -130,45 +135,35 @@ $engineFile = "$installPath\Astroneer\Astro\Saved\Config\WindowsServer\Engine.in
 
 Write-Host "Running Unreal Engine 4 Prerequisite Setup"
 # So even though we instal the prereq's, AstroServer is totally unaware.
-$uninstall = Start-Process -FilePath "$installPath\Astroneer\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe" -ArgumentList "/uninstall /passive" -WorkingDirectory $installPath -PassThru
-$uninstall.WaitForExit()
-$install = Start-Process -FilePath "$installPath\Astroneer\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe"  -ArgumentList "/install /passive" -WorkingDirectory $installPath -PassThru
-$install.WaitForExit()
+$proc = Start-Process -FilePath "$installPath\Astroneer\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe" -ArgumentList "/uninstall /passive" -WorkingDirectory $installPath -PassThru
+$proc | Wait-Process
+$proc = Start-Process -FilePath "$installPath\Astroneer\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe"  -ArgumentList "/install /passive" -WorkingDirectory $installPath -PassThru
+$proc | Wait-Process
 
 # So now we need to start AstroServer.  It won't generate config files, it will ask to install dependencies that are ALREADY PRESENT.
 Write-Warning "Getting AstroServer ready..."
-netsh advfirewall firewall add rule name="AstroServer" dir=in action=allow program="$installPath\Astroneer\AstroServer.exe"
-netsh advfirewall firewall add rule name="AstroServer" dir=in action=allow program="$installPath\Astroneer\astro\binaries\win64\astroserver-win64-shipping.exe"
+netsh advfirewall firewall add rule name="AstroServer" dir=in action=allow program="$installPath\Astroneer\AstroServer.exe" | Out-Null
+netsh advfirewall firewall add rule name="AstroServer" dir=in action=allow program="$installPath\Astroneer\astro\binaries\win64\astroserver-win64-shipping.exe" | Out-Null
 # This one silences a popup for dependncies that are already installed
 Write-Host "Start Astroneer..."
 $proc = Start-Process -filePath "$installPath\Astroneer\AstroServer.exe" -WorkingDirectory "$installPath\Astroneer\" -PassThru
-$proc | Wait-Process -Timeout 30 -ErrorAction SilentlyContinue 
-# Kill AstroServer.exe if it's not dead yet
-Write-Host "Kill Astroneer..."
-Stop-Process $proc
-
-# This one lets astro generate the config files
-Write-Host "Start Astroneer..."
-$proc = Start-Process -filePath "$installPath\Astroneer\AstroServer.exe" -WorkingDirectory "$installPath\Astroneer\" -PassThru
-$proc | Wait-Process -Timeout 30 -ErrorAction SilentlyContinue 
-# Kill AstroServer.exe if it's not dead yet
-Write-Host "Kill Astroneer..."
-Stop-Process $proc
-
-# Now we can continue
-Write-Host "Sleeping until the config file shows up"
-while (!(Test-Path $configFile)) { 
-    Start-Sleep 10
-    Write-Host "."
-}
-Write-Host "Config File Exists!"
-
 Write-Host "Waiting for config file to populate"
-while ( (get-childitem $configFile).length -eq 10 ) {
+$slept = $false
+$start = Get-Date
+while (($start.AddMinutes(2) -gt (Get-Date)) -and (!(Test-Path $configFile) -or (get-childitem $configFile).length -le 10)) {
     Start-Sleep 10
-    Write-Host "."
+    Write-Host "." -NoNewLine
+    $slept = $true
 }
-Write-Host "Config file has data!"
+# Kill AstroServer.exe if it's not dead yet
+if ($slept) { Write-Host }
+if (!(Test-Path $configFile) -or (get-childitem $configFile).length -le 10) {
+    Write-Error "Timed out waiting for config file to be populated"
+    exit 1
+}
+Write-Host "Kill Astroneer..."
+Stop-Process $proc
+
 Write-Host "Modifying Config File"
 
 # Two blank lines signifies the end of the config file.  So we need to remove them for now
@@ -192,15 +187,13 @@ Write-Host "Setting Owner Name: $ownerName"
 Set-Content -Path $configFile -Value (get-content -Path $configFile | Select-String -Pattern "OwnerName=" -NotMatch)
 Add-Content $configFile "OwnerName=$ownerName"
 
-Write-Host "Setting Port: 8777"
+Write-Host "Setting Port: $serverPort"
 Set-Content -Path $engineFile -Value (get-content -Path $engineFile | Select-String -Pattern "[URL]" -NotMatch)
 Set-Content -Path $engineFile -Value (get-content -Path $engineFile | Select-String -Pattern "Port=*" -NotMatch)
-Add-Content $engineFile "`r`n`r`n[URL]`r`nPort=8777"
+Add-Content $engineFile "`r`n`r`n[URL]`r`nPort=$serverPort"
 
 
-if ( $serverPassword -eq $null) {     
-    
-} else {
+if ( $serverPassword) {
     Write-Host "Setting Server Password"
     Set-Content -Path $configFile -Value (get-content -Path $configFile | Select-String -Pattern "ServerPassword=" -NotMatch)
     Add-Content $configFile "ServerPassword=$serverPassword"
@@ -216,11 +209,18 @@ if ($useGUI -eq $true) {
     $filename = "AstroLauncher.exe"
     $releasesUri = "https://api.github.com/repos/$repo/releases/latest"
     $downloadUri = ((Invoke-RestMethod -Method GET -Uri $releasesUri).assets | Where-Object name -like $filename ).browser_download_url
-    $iwrResponse = Invoke-WebRequest -Uri $downloadUri -OutFile "$installPath\Astroneer\AstroLauncher.exe" -PassThru -UseBasicParsing
+    Invoke-WebRequest -Uri $downloadUri -OutFile "$installPath\Astroneer\AstroLauncher.exe" -UseBasicParsing
 }
 
-Write-Host "Adding Firewall Exceptions for port 8777 UDP"
-netsh advfirewall firewall add rule name="AstroServer" dir=in action=allow protocol=UDP localport=8777
+Write-Host "Adding Firewall Exceptions for port $serverPort UDP"
+netsh advfirewall firewall add rule name="AstroServer" dir=in action=allow protocol=UDP localport=$serverPort  | Out-Null
+
+if ($useGUI -eq $true) {
+    Write-Host "Adding Firewall Exception for AstroLauncher TCP 5000"
+    Write-Warning "AstroLauncher will listen on 0.0.0.0:5000 by default.  Check your firewall rules to limit access if needed!"
+    netsh advfirewall firewall add rule name="AstroLauncher" dir=in action=allow program="$installPath\Astroneer\AstroLauncher.exe"  | Out-Null
+    netsh advfirewall firewall add rule name="AstroLauncher" dir=in action=allow protocol=TCP localport=5000  | Out-Null
+}
 
 if ($reboot -eq $true) {
     Write-Warning "Reboot scheduled for 60 seconds!"
@@ -236,22 +236,22 @@ if ($reboot -eq $true) {
         $data = Read-Host -Prompt "Press ENTER to reboot."
         shutdown /r /t 60
     }
-    
 } else {
     Write-Host "Starting AstroServer.  Have fun!"
     if ($useGUI -eq $true) {
-        Write-Host "Adding Firewall Exception for AstroLauncher TCP 5000"
-        netsh advfirewall firewall add rule name="AstroLauncher" dir=in action=allow program="$installPath\Astroneer\AstroLauncher.exe"
-        netsh advfirewall firewall add rule name="AstroLauncher" dir=in action=allow protocol=TCP localport=5000
-        $WmiProcess = Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList "$installPath\Astroneer\AstroLauncher.exe -p $installPath\Astroneer\"
+        Start-Process -FilePath "$installPath\Astroneer\AstroLauncher.exe" -WorkingDirectory $installPath\Astroneer\
         Write-Host "AstroLauncher should be available at http://localhost:5000"
-        Write-Warning "AstroLauncher is listening on 0.0.0.0:5000 by default.  Check your firewall rules to limit access if needed!"
     } else {
         Write-Host "If you need to make changes to the config file, ensure you kill the server first!"
-        $WmiProcess = Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList "$installPath\Astroneer\AstroServer.exe"
+        Start-Process -FilePath "$installPath\Astroneer\AstroServer.exe" -WorkingDirectory $installPath\Astroneer\
     }
 }
-Write-Host "Installation is completed!  This script will exit in 2 minutes"
 
-Start-Sleep 120
+if ($noWait) {
+    Write-Host "Installation is completed!"
+} else {
+    Write-Host "Installation is completed!  This script will exit in 2 minutes"
+    Start-Sleep 120
+}
+
 Stop-Transcript
