@@ -25,9 +25,9 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 
 [Watch the Video](https://screencast-o-matic.com/embed?sc=cYjnQCENUS&v=6&ff=1&title=0&controls=1)
 
-1. Download the `install-astroneer-server.zip` file from the [latest release](https://github.com/alex4108/AstroInstaller/releases) 
+1. Download the `AstroInstaller.zip` file from the [latest release](https://github.com/alex4108/AstroInstaller/releases) 
 1. Extract the ZIP
-1. Run the `install-astroneer-server.exe` file as administrator
+1. Run the `AstroInstaller.exe` file as administrator
 1. Answer the prompts followed by ENTER
 
 * `Owner Steam Name`: This is how your steam name is publicly visible to the world.
