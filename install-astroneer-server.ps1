@@ -130,8 +130,10 @@ $engineFile = "$installPath\Astroneer\Astro\Saved\Config\WindowsServer\Engine.in
 
 Write-Host "Running Unreal Engine 4 Prerequisite Setup"
 # So even though we instal the prereq's, AstroServer is totally unaware.
-Start-Process -FilePath "$installPath\Astroneer\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe" -ArgumentList "/uninstall /passive" -WorkingDirectory $installPath | Get-Process
-Start-Process -FilePath "$installPath\Astroneer\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe"  -ArgumentList "/install /passive" -WorkingDirectory $installPath | Get-Process
+$uninstall = Start-Process -FilePath "$installPath\Astroneer\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe" -ArgumentList "/uninstall /passive" -WorkingDirectory $installPath -PassThru
+$uninstall.WaitForExit()
+$install = Start-Process -FilePath "$installPath\Astroneer\Engine\Extras\Redist\en-us\UE4PrereqSetup_x64.exe"  -ArgumentList "/install /passive" -WorkingDirectory $installPath -PassThru
+$install.WaitForExit()
 
 # So now we need to start AstroServer.  It won't generate config files, it will ask to install dependencies that are ALREADY PRESENT.
 Write-Warning "Getting AstroServer ready..."
