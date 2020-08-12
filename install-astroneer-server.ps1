@@ -3,7 +3,7 @@ Start-Transcript -Path "$PSScriptRoot\AstroInstaller.log" -Append
 #Param($ownerName, $serverName, $maxFPS, $serverPassword, [switch]$installAsService)
 
 
-$version = "2.1.2"
+$version = "2.1.3"
 Write-Host "AstroInstaller $version"
 
 # Detect Windows Server or Windows 10 
