@@ -45,7 +45,7 @@ param(
 $ErrorActionPreference = "Stop"
 Start-Transcript -Path "$PSScriptRoot\AstroInstaller.log" -Append
 
-$version = "2.1.3"
+$version = "2.1.4"
 Write-Host "AstroInstaller $version"
 
 # This is to workaround an issue with older .NET Framework where powershell cannot download Nuget provider because of the newer TLS cipher suits
