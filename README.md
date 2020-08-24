@@ -6,8 +6,7 @@
 [![Build Status](https://travis-ci.com/alex4108/AstroInstaller.svg?branch=master)](https://travis-ci.com/alex4108/AstroInstaller)
 ![Supports Windows Server 2019](https://img.shields.io/badge/Windows-Server%202019-brightgreen)
 ![Supports Windows 10](https://img.shields.io/badge/Windows-10-brightgreen)
-![Requires Powershell 5](https://img.shields.io/badge/Powershell-5-green)
-![Powershell 6+ Not Supported](https://img.shields.io/badge/Powershell-6+-red)
+![Requires Powershell 5](https://img.shields.io/badge/Powershell-5+-green)
 [![GitHub issues](https://img.shields.io/github/issues/alex4108/AstroInstaller)](https://github.com/alex4108/AstroInstaller/issues)
 [![GitHub forks](https://img.shields.io/github/forks/alex4108/AstroInstaller)](https://github.com/alex4108/AstroInstaller/network)
 [![GitHub stars](https://img.shields.io/github/stars/alex4108/AstroInstaller)](https://github.com/alex4108/AstroInstaller/stargazers)
@@ -32,9 +31,7 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 
 * `Owner Steam Name`: This is how your steam name is publicly visible to the world.
 * `Server Name`: This will be the name of your server
-* `Max FPS`: Set to 30 if you're unsure.  
 * `Server Password`: A server password if you wish, or just hit enter for no password.
-* `Use AstroLauncher as GUI [y/n]`: _Recommended_ If you'd like to install [AstroLauncher](https://www.github.com/ricky-davis/AstroLauncher) to manage the server.
 
 ## Advanced Method
 
@@ -43,19 +40,22 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 
 #### Supported command line switches and examples
 
-* `-ownerName "The owner steam name"`
-* `-serverName "The server name"`
-* `-serverPassword "A Super Secure Password"`
-* `-maxFPS 60`
-* `-useGUI y` or `-useGUI n` to install [AstroLauncher](https://www.github.com/ricky-davis/AstroLauncher)
-* `-autoReboot y` _Optional_ _Default: n_ If set to y, the server will be rebooted automatically after installation if needed.  Otherwise, if a reboot is needed, the script will exit and the server will not be able to start until the reboot is complete.
+* `-ownerName "Astroneer server owner steam name"`
+* `-serverName "Astroneer server name"`
+* `-serverPassword "A Super Secure Password"` Server password. If ownerName, or serverName or serverPasswords are not provided on the command line, the script will ask for them interactively
+* `-noServerPassword` _Optional._ Suppress password prompt if no server password was provided. Use it to run in non-interactive mode.
+* `-erverPort 8777` _Optional_ _Default: 8777_ Astroneer server UDP port
+* `-maxFPS 30` _Optional_ _Default: 30_ Maximum server FPS
+* `-noAstroLauncher` _Optional._ Disables use of [AstroLauncher](https://www.github.com/ricky-davis/AstroLauncher)
+* `-autoReboot` _Optional._  If specified, the server will be rebooted automatically after installation if needed.  Otherwise, if a reboot is needed, the script will exit and the server will not be able to start until the reboot is complete.
 * `-installPath "C:\SteamServers"` _Optional_ _Default: C:\SteamServers_ The path to install to **without trailing slash**
+* `-noWait` _Optional._ Suppress 2 minutes wait after script finishes. Use it to run in non-interactive mode.
 
 #### Unattended installation
 
-By specifiying all required parameters you will be able to run the installation completely unattended.
+By specifiying `ownerName`, `serverName` and either `serverPassword` or `noServerPassword` parameters you will be able to run the installation completely unattended.
 
-* `powershell.exe -executionpolicy bypass -file "install-astroneer-server.ps1" -ownerName "Guy" -serverName "Guys Lair" -serverPassword "Guy123" -maxFPS 60 -useGUI y -autoReboot y`
+* `powershell.exe -executionpolicy bypass -file "install-astroneer-server.ps1" -ownerName "Guy" -serverName "Guys Lair" -serverPassword "Guy123" -autoReboot`
 
 # Contributing
 
@@ -69,9 +69,7 @@ Contributions are what make the open source community such an amazing place to b
 
 # Requirements
 
-This script has been tested on Windows Server 2019 and Windows 10 1909, both using Powershell 5.
-
-Powershell 6+ users will not be able to use this as it relies on the depricated `Invoke-WmiMethod -Class Win32_Process` class.
+This script has been tested on Windows Server 2019 and Windows 10 1909 and Windows 10 2004 using Powershell 5 & Powershell 7.
 
 # Credits
 
