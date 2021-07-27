@@ -44,7 +44,7 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 * `-serverName "Astroneer server name"`
 * `-serverPassword "A Super Secure Password"` Server password. If ownerName, or serverName or serverPasswords are not provided on the command line, the script will ask for them interactively
 * `-noServerPassword` _Optional._ Suppress password prompt if no server password was provided. Use it to run in non-interactive mode.
-* `-erverPort 8777` _Optional_ _Default: 8777_ Astroneer server UDP port
+* `-serverPort 8777` _Optional_ _Default: 8777_ Astroneer server UDP port
 * `-maxFPS 30` _Optional_ _Default: 30_ Maximum server FPS
 * `-noAstroLauncher` _Optional._ Disables use of [AstroLauncher](https://www.github.com/ricky-davis/AstroLauncher)
 * `-autoReboot` _Optional._  If specified, the server will be rebooted automatically after installation if needed.  Otherwise, if a reboot is needed, the script will exit and the server will not be able to start until the reboot is complete.
