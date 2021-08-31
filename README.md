@@ -20,21 +20,6 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 
 # How to use
 
-## Easy Method (5 minutes)
-
-[Watch the Video](https://screencast-o-matic.com/embed?sc=cYjnQCENUS&v=6&ff=1&title=0&controls=1)
-
-1. Download the `AstroInstaller.zip` file from the [latest release](https://github.com/alex4108/AstroInstaller/releases) 
-1. Extract the ZIP
-1. Run the `AstroInstaller.exe` file as administrator
-1. Answer the prompts followed by ENTER
-
-* `Owner Steam Name`: This is how your steam name is publicly visible to the world.
-* `Server Name`: This will be the name of your server
-* `Server Password`: A server password if you wish, or just hit enter for no password.
-
-## Advanced Method
-
 1. Download or Clone the repository
 1. Execute the powershell script: `powershell.exe -executionpolicy bypass -file "install-astroneer-server.ps1"`
 
@@ -53,7 +38,7 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 
 #### Unattended installation
 
-By specifiying `ownerName`, `serverName` and either `serverPassword` or `noServerPassword` parameters you will be able to run the installation completely unattended.
+By specifiying `ownerName`, `serverName` and either `serverPassword` or `noServerPassword` parameters you will be able to run the installation completely unattended.  The `autoReboot` flag is appended so that the system reboots if prompted by one of the installation procedures carried out during execution.
 
 * `powershell.exe -executionpolicy bypass -file "install-astroneer-server.ps1" -ownerName "Guy" -serverName "Guys Lair" -serverPassword "Guy123" -autoReboot`
 
