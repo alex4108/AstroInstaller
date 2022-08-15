@@ -244,7 +244,7 @@ if ($installService -eq $true) {
 
     Invoke-WebRequest -Uri $nssmUrl -OutFile "$installPath\nssm.zip"
     Expand-Archive -Path "$installPath\nssm.zip" -DestinationPath "$installPath"
-    Start-Process -FilePath "$installPath\$nssm_build\nssm.exe" -NoNewWindow -ArgumentList "install $astroServiceName $pathToAstro" -Wait -PassThru
+    Start-Process -FilePath "$installPath\$nssm_build\win64\nssm.exe" -NoNewWindow -ArgumentList "install $astroServiceName $pathToAstro" -Wait -PassThru
 }
 
 if ($reboot -eq $true) {
