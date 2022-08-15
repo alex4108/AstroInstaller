@@ -136,7 +136,7 @@ $steamCMDResult = Install-SteamCMD -InstallPath $installPath -Force
 
 Write-Host "Installing ASTRONEER Dedicated Server"
 mkdir $installPath -Force | Out-Null
-$installPath\steamcmd\steamcmd.exe +anonymous +force_install_dir $installPath\Astroneer\ +app_update 728470 +quit
+"$installPath\steamcmd\steamcmd.exe" +anonymous +force_install_dir $installPath\Astroneer\ +app_update 728470 +quit
 
 $configFile = "$installPath\Astroneer\Astro\Saved\Config\WindowsServer\AstroServerSettings.ini"
 $engineFile = "$installPath\Astroneer\Astro\Saved\Config\WindowsServer\Engine.ini"
@@ -230,7 +230,7 @@ if ($useGUI -eq $true) {
     netsh advfirewall firewall add rule name="AstroLauncher" dir=in action=allow protocol=TCP localport=5000  | Out-Null
 }
 
-if ($installService -eq true) { 
+if ($installService -eq $true) { 
     if ($useGui -eq $true) { 
         $astroServiceName = "AstroLauncher"
         $pathToAstro = "$installPath\Astroneer\AstroLauncher.exe"
@@ -241,18 +241,18 @@ if ($installService -eq true) {
 
     Invoke-WebRequest -Uri $nssmUrl -OutFile "$installPath\nssm.zip"
     Expand-Archive -Path "$installPath\nssm.zip" -DestinationPath "$installPath"
-    $installPath\$nssm_build\nssm.exe install $astroServiceName $pathToAstro 
+    "$installPath\$nssm_build\nssm.exe" install $astroServiceName $pathToAstro 
 }
 
 if ($reboot -eq $true) {
     if ($useGUi -eq $true) { 
-        if ($installService -eq true) { 
+        if ($installService -eq $true) { 
             Write-Host "The system will now reboot.  Upon boot the AstroLauncher service should be running, and you should have an astroneer server!"
         } else { 
             Write-Warning "When you come back, go to $installPath\Astroneer\ and run AstroLauncher.exe"
         }
     } else {
-        if ($installService -eq true) { 
+        if ($installService -eq $true) { 
             Write-Host "The system will now reboot.  Upon boot the AstroServer service should be running, and you should have an astroneer server!"
         } else { 
             Write-Warning "When you come back, go to $installPath\Astroneer\ and run AstroServer.exe"
@@ -260,10 +260,10 @@ if ($reboot -eq $true) {
     }
     if ($autoReboot -eq $true) { 
         Write-Warning "System reboot scheduled for 60 seconds from now."
-        shutdown /r /t 60
+        Restart-Computer -Delay 60
     } else {
         $data = Read-Host -Prompt "Press ENTER to reboot."
-        shutdown /r /t 60
+        Restart-Computer -Delay 60
     }
 } else {
     Write-Host "Installation Completed. Starting Astroneer Dedicated Server.  Have fun!"
@@ -277,7 +277,7 @@ if ($reboot -eq $true) {
         }
     }
     else {
-        $installPath\$nssm_build\nssm.exe install $astroServiceName
+        "$installPath\$nssm_build\nssm.exe" install $astroServiceName
     }
 }
 

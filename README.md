@@ -33,7 +33,7 @@ Did I save you some time?  [Buy me a :coffee::smile:](https://venmo.com/alex-sch
 * `-serverPort 8777` _Optional_ _Default: 8777_ Astroneer server UDP port
 * `-maxFPS 30` _Optional_ _Default: 30_ Maximum server FPS
 * `-noAstroLauncher` _Optional._ Disables use of [AstroLauncher](https://www.github.com/ricky-davis/AstroLauncher)
-* `-installService false` _Optional._ Disables use of [nssm](https://nssm.cc), a simple way to manage services.
+* `-noService` _Optional._ Disables use of [nssm](https://nssm.cc), a simple way to manage services.
 * `-autoReboot` _Optional._  If specified, the server will be rebooted automatically after installation if needed.  Otherwise, if a reboot is needed, the script will exit and the server will not be able to start until the reboot is complete.
 * `-installPath "C:\SteamServers"` _Optional_ _Default: C:\SteamServers_ The path to install to **without trailing slash**
 * `-noWait` _Optional._ Suppress 2 minutes wait after script finishes. Use it to run in non-interactive mode.
@@ -52,7 +52,7 @@ With Microsoft Azure and other cloud providers you can provide a User Data scrip
 mkdir C:\temp
 Invoke-Webrequest -Uri https://github.com/alex4108/AstroInstaller/archive/refs/heads/master.zip -OutFile C:\temp\AstroInstaller.zip
 Expand-Archive -Path C:\temp\AstroInstaller.zip -DestinationPath C:\temp\AstroInstaller\
-Set-ExecutionPolicy unrestricted
+Set-ExecutionPolicy unrestricted -Force
 C:\temp\AstroInstaller\AstroInstaller-master\install-astroneer-server.ps1 SWITCHES HERE
 ```
 
