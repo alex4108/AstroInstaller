@@ -238,7 +238,7 @@ if ($installService -eq $true) {
         $pathToAstro = "$installPath\Astroneer\AstroServer.exe"
     }
 
-    Invoke-WebRequest -Uri $nssmUrl -OutFile "$installPath\nssm.zip"
+    Invoke-WebRequest -Uri $nssmUrl -OutFile "$installPath\nssm.zip" -UseBasicParsing
     Expand-Archive -Path "$installPath\nssm.zip" -DestinationPath "$installPath"
     Stop-Process $proc -Force
     Start-Process -FilePath "$installPath\$nssm_build\win64\nssm.exe" -NoNewWindow -ArgumentList "install $astroServiceName $pathToAstro" -Wait -PassThru
