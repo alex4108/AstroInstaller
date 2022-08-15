@@ -106,6 +106,8 @@ Write-Host "Server Name: [$serverName]"
 Write-Host "Server Port: [$serverPort]"
 Write-Host "Max FPS: [$maxFPS]"
 Write-Host "AstroLauncher GUI: [$useGUI]"
+Write-Host "Install Path: [$installPath]"
+Write-Host "Install NSSM Service Manager: [$installService]"
 
 Write-Host "Installing DotNet Framework"
 if ( $windowsServer -eq $true ) { 
