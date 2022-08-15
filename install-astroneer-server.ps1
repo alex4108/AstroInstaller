@@ -37,7 +37,7 @@ param(
   [string]$installPath = "C:\SteamServers",
   [int]$maxFPS = 30,
   [switch]$noAstroLauncher,
-  [swtich]$noService,
+  [switch]$noService,
   [switch]$autoReboot,
   [switch]$noWait
 )
