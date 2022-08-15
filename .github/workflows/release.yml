@@ -25,3 +25,13 @@ jobs:
         with:
           # Filename for archive
           filename: AstroInstaller.zip
+          exclusions: '*.git*'
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: AstroInstaller.zip
+          asset_name: AstroInstaller
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "AstroInstaller Version ${{ github.ref }}"
