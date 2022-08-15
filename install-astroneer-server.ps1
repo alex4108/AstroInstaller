@@ -205,7 +205,6 @@ Add-Content $configFile "`r`n`r`n"
 Write-Host "Setting Port: $serverPort"
 Set-Content -Path $engineFile -Value (get-content -Path $engineFile | Select-String -Pattern 'URL|Port' -NotMatch)
 $header = "[URL]`r`nPort=$serverPort`r`n"
-$engineFileContent = $header | Get-Content $engineFile
 $($header; Get-Content $engineFIle) | Set-Content $engineFile
 
 # Add lines to TOP
