@@ -138,7 +138,7 @@ $steamCMDResult = Install-SteamCMD -InstallPath $installPath -Force
 
 Write-Host "Installing ASTRONEER Dedicated Server"
 mkdir $installPath -Force | Out-Null
-Start-Process -FilePath "$installPath\steamcmd\steamcmd.exe" -NoNewWindow -ArgumentList " +anonymous +force_install_dir $installPath\Astroneer\ +app_update 728470 +quit" -Wait -PassThru
+Start-Process -FilePath "$installPath\steamcmd\steamcmd.exe" -NoNewWindow -ArgumentList "+login anonymous +force_install_dir $installPath\Astroneer\ +app_update 728470 +quit" -Wait -PassThru
 
 
 $configFile = "$installPath\Astroneer\Astro\Saved\Config\WindowsServer\AstroServerSettings.ini"
