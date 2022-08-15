@@ -138,7 +138,7 @@ $steamCMDResult = Install-SteamCMD -InstallPath $installPath -Force
 
 Write-Host "Installing ASTRONEER Dedicated Server"
 mkdir $installPath -Force | Out-Null
-Start-Process -FilePath "$installPath\steamcmd\steamcmd.exe" -NoNewWindow -ArgumentList "+login anonymous +force_install_dir $installPath\Astroneer\ +app_update 728470 +quit" -Wait -PassThru
+Start-Process -FilePath "$installPath\steamcmd\steamcmd.exe" -NoNewWindow -ArgumentList "+force_install_dir $installPath\Astroneer\ +login anonymous +app_update 728470 +quit" -Wait -PassThru
 
 
 $configFile = "$installPath\Astroneer\Astro\Saved\Config\WindowsServer\AstroServerSettings.ini"
@@ -172,9 +172,6 @@ if (!(Test-Path $configFile) -or (get-childitem $configFile).length -le 10) {
     Write-Error "Timed out waiting for config file to be populated"
     exit 1
 }
-Write-Host "Preparing to modify Astroneer config, killing the process..."
-Stop-Process $proc
-
 Write-Host "Modifying Config File"
 
 # Two blank lines signifies the end of the config file.  So we need to remove them for now
@@ -244,6 +241,7 @@ if ($installService -eq $true) {
 
     Invoke-WebRequest -Uri $nssmUrl -OutFile "$installPath\nssm.zip"
     Expand-Archive -Path "$installPath\nssm.zip" -DestinationPath "$installPath"
+    Stop-Process $proc -Force
     Start-Process -FilePath "$installPath\$nssm_build\win64\nssm.exe" -NoNewWindow -ArgumentList "install $astroServiceName $pathToAstro" -Wait -PassThru
 }
 
@@ -273,14 +271,16 @@ if ($reboot -eq $true) {
     if ($installService -eq $false) { 
         if ($useGUI -eq $true) {
             Start-Process -FilePath "$installPath\Astroneer\AstroLauncher.exe" -WorkingDirectory $installPath\Astroneer\
+            Stop-Process $proc -Force
             Write-Host "AstroLauncher should be available at http://localhost:5000"
         } else {
             Write-Host "If you need to make changes to the config file, ensure you kill the server first!"
+            Stop-Process $proc -Force
             Start-Process -FilePath "$installPath\Astroneer\AstroServer.exe" -WorkingDirectory $installPath\Astroneer\
         }
     }
     else {
-        Start-Process -FilePath "$installPath\$nssm_build\nssm.exe" -NoNewWindow -ArgumentList "start $astroServiceName" -Wait -PassThru
+        Start-Process -FilePath "$installPath\$nssm_build\win64\nssm.exe" -NoNewWindow -ArgumentList "start $astroServiceName" -Wait -PassThru
     }
 }
 
