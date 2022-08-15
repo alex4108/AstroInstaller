@@ -176,7 +176,6 @@ Write-Host "Modifying Config File"
 
 # Two blank lines signifies the end of the config file.  So we need to remove them for now
 (Get-Content $configFile) | ? {$_.trim() -ne "" } | Set-Content $configFile
-(Get-Content $engineFile) | ? {$_.trim() -ne "" } | Set-Content $engineFile
 
 $publicIP = Invoke-RestMethod -Uri 'http://ifconfig.me/ip'
 Write-Host "Setting Public IP: $publicIP"
@@ -195,12 +194,6 @@ Write-Host "Setting Owner Name: $ownerName"
 Set-Content -Path $configFile -Value (get-content -Path $configFile | Select-String -Pattern "OwnerName=" -NotMatch)
 Add-Content $configFile "OwnerName=$ownerName"
 
-Write-Host "Setting Port: $serverPort"
-Set-Content -Path $engineFile -Value (get-content -Path $engineFile | Select-String -Pattern "[URL]" -NotMatch)
-Set-Content -Path $engineFile -Value (get-content -Path $engineFile | Select-String -Pattern "Port=*" -NotMatch)
-Add-Content $engineFile "`r`n`r`n[URL]`r`nPort=$serverPort"
-
-
 if ( $serverPassword) {
     Write-Host "Setting Server Password"
     Set-Content -Path $configFile -Value (get-content -Path $configFile | Select-String -Pattern "ServerPassword=" -NotMatch)
@@ -208,7 +201,9 @@ if ( $serverPassword) {
 }
 # Put those two newlines back
 Add-Content $configFile "`r`n`r`n"
-Add-Content $engineFile "`r`n`r`n"
+
+Write-Host "Setting Port: $serverPort"
+((Get-Content -path $engineFIle -Raw) -replace '7777',"$serverPort") | Set-Content -Path $engineFile
 
 # Install AstroLauncher
 if ($useGUI -eq $true) {
@@ -244,6 +239,12 @@ if ($installService -eq $true) {
     Stop-Process $proc -Force
     Start-Process -FilePath "$installPath\$nssm_build\win64\nssm.exe" -NoNewWindow -ArgumentList "install $astroServiceName $pathToAstro" -Wait -PassThru
 }
+
+# Delete Engine.ini
+
+# Start Launcher or Server
+
+# Replace Port #
 
 if ($reboot -eq $true) {
     if ($useGUi -eq $true) { 
