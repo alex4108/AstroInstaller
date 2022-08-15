@@ -37,15 +37,23 @@ param(
   [string]$installPath = "C:\SteamServers",
   [int]$maxFPS = 30,
   [switch]$noAstroLauncher,
+  [switch]$noService,
   [switch]$autoReboot,
   [switch]$noWait
 )
 #Requires -RunAsAdministrator
 
+$installService = !$noService
+
+if ($installService -eq $true) { 
+    $nssm_build = "nssm-2.24-101-g897c7ad"
+    $nssmUrl = "https://nssm.cc/ci/$nssm_build.zip"
+}
+
 $ErrorActionPreference = "Stop"
 Start-Transcript -Path "$PSScriptRoot\AstroInstaller.log" -Append
 
-$version = "2.1.4"
+$version = "2.1.5"
 Write-Host "AstroInstaller $version"
 
 # This is to workaround an issue with older .NET Framework where powershell cannot download Nuget provider because of the newer TLS cipher suits
@@ -98,6 +106,8 @@ Write-Host "Server Name: [$serverName]"
 Write-Host "Server Port: [$serverPort]"
 Write-Host "Max FPS: [$maxFPS]"
 Write-Host "AstroLauncher GUI: [$useGUI]"
+Write-Host "Install Path: [$installPath]"
+Write-Host "Install NSSM Service Manager: [$installService]"
 
 Write-Host "Installing DotNet Framework"
 if ( $windowsServer -eq $true ) { 
@@ -128,7 +138,8 @@ $steamCMDResult = Install-SteamCMD -InstallPath $installPath -Force
 
 Write-Host "Installing ASTRONEER Dedicated Server"
 mkdir $installPath -Force | Out-Null
-Update-SteamApp -AppID 728470 -Path "$installPath\Astroneer" -Force
+Start-Process -FilePath "$installPath\steamcmd\steamcmd.exe" -NoNewWindow -ArgumentList "+force_install_dir $installPath\Astroneer\ +login anonymous +app_update 728470 +quit" -Wait -PassThru
+
 
 $configFile = "$installPath\Astroneer\Astro\Saved\Config\WindowsServer\AstroServerSettings.ini"
 $engineFile = "$installPath\Astroneer\Astro\Saved\Config\WindowsServer\Engine.ini"
@@ -161,14 +172,10 @@ if (!(Test-Path $configFile) -or (get-childitem $configFile).length -le 10) {
     Write-Error "Timed out waiting for config file to be populated"
     exit 1
 }
-Write-Host "Kill Astroneer..."
-Stop-Process $proc
-
 Write-Host "Modifying Config File"
 
 # Two blank lines signifies the end of the config file.  So we need to remove them for now
 (Get-Content $configFile) | ? {$_.trim() -ne "" } | Set-Content $configFile
-(Get-Content $engineFile) | ? {$_.trim() -ne "" } | Set-Content $engineFile
 
 $publicIP = Invoke-RestMethod -Uri 'http://ifconfig.me/ip'
 Write-Host "Setting Public IP: $publicIP"
@@ -187,12 +194,6 @@ Write-Host "Setting Owner Name: $ownerName"
 Set-Content -Path $configFile -Value (get-content -Path $configFile | Select-String -Pattern "OwnerName=" -NotMatch)
 Add-Content $configFile "OwnerName=$ownerName"
 
-Write-Host "Setting Port: $serverPort"
-Set-Content -Path $engineFile -Value (get-content -Path $engineFile | Select-String -Pattern "[URL]" -NotMatch)
-Set-Content -Path $engineFile -Value (get-content -Path $engineFile | Select-String -Pattern "Port=*" -NotMatch)
-Add-Content $engineFile "`r`n`r`n[URL]`r`nPort=$serverPort"
-
-
 if ( $serverPassword) {
     Write-Host "Setting Server Password"
     Set-Content -Path $configFile -Value (get-content -Path $configFile | Select-String -Pattern "ServerPassword=" -NotMatch)
@@ -200,7 +201,13 @@ if ( $serverPassword) {
 }
 # Put those two newlines back
 Add-Content $configFile "`r`n`r`n"
-Add-Content $engineFile "`r`n`r`n"
+
+Write-Host "Setting Port: $serverPort"
+Set-Content -Path $engineFile -Value (get-content -Path $engineFile | Select-String -Pattern 'URL|Port' -NotMatch)
+$header = "[URL]`r`nPort=$serverPort`r`n"
+$($header; Get-Content $engineFIle) | Set-Content $engineFile
+
+# Add lines to TOP
 
 # Install AstroLauncher
 if ($useGUI -eq $true) {
@@ -222,30 +229,68 @@ if ($useGUI -eq $true) {
     netsh advfirewall firewall add rule name="AstroLauncher" dir=in action=allow protocol=TCP localport=5000  | Out-Null
 }
 
+if ($installService -eq $true) { 
+    if ($useGui -eq $true) { 
+        $astroServiceName = "AstroLauncher"
+        $pathToAstro = "$installPath\Astroneer\AstroLauncher.exe"
+    } else { 
+        $astroServiceName = "AstroServer"
+        $pathToAstro = "$installPath\Astroneer\AstroServer.exe"
+    }
+
+    Invoke-WebRequest -Uri $nssmUrl -OutFile "$installPath\nssm.zip"
+    Expand-Archive -Path "$installPath\nssm.zip" -DestinationPath "$installPath"
+    Stop-Process $proc -Force
+    Start-Process -FilePath "$installPath\$nssm_build\win64\nssm.exe" -NoNewWindow -ArgumentList "install $astroServiceName $pathToAstro" -Wait -PassThru
+}
+
+# Delete Engine.ini
+
+# Start Launcher or Server
+
+# Replace Port #
+
 if ($reboot -eq $true) {
-    Write-Warning "Reboot scheduled for 60 seconds!"
-    if ($useGUI -eq $true) {
-        Write-Warning "When you come back, go to $installPath\Astroneer\ and run AstroLauncher.exe"
+    if ($useGUi -eq $true) { 
+        if ($installService -eq $true) { 
+            Write-Host "The system will now reboot.  Upon boot the AstroLauncher service should be running, and you should have an astroneer server!"
+        } else { 
+            Write-Warning "When you come back, go to $installPath\Astroneer\ and run AstroLauncher.exe"
+        }
     } else {
-        Write-Warning "When you come back, go to $installPath\Astroneer\ and run AstroServer.exe"
+        if ($installService -eq $true) { 
+            Write-Host "The system will now reboot.  Upon boot the AstroServer service should be running, and you should have an astroneer server!"
+        } else { 
+            Write-Warning "When you come back, go to $installPath\Astroneer\ and run AstroServer.exe"
+        }
     }
     if ($autoReboot -eq $true) { 
         Write-Warning "System reboot scheduled for 60 seconds from now."
-        shutdown /r /t 60
+        Restart-Computer -Delay 60
     } else {
         $data = Read-Host -Prompt "Press ENTER to reboot."
-        shutdown /r /t 60
+        Restart-Computer -Delay 60
     }
 } else {
-    Write-Host "Starting AstroServer.  Have fun!"
-    if ($useGUI -eq $true) {
-        Start-Process -FilePath "$installPath\Astroneer\AstroLauncher.exe" -WorkingDirectory $installPath\Astroneer\
-        Write-Host "AstroLauncher should be available at http://localhost:5000"
-    } else {
-        Write-Host "If you need to make changes to the config file, ensure you kill the server first!"
-        Start-Process -FilePath "$installPath\Astroneer\AstroServer.exe" -WorkingDirectory $installPath\Astroneer\
+    Write-Host "Installation Completed. Starting Astroneer Dedicated Server.  Have fun!"
+    if ($installService -eq $false) { 
+        if ($useGUI -eq $true) {
+            Start-Process -FilePath "$installPath\Astroneer\AstroLauncher.exe" -WorkingDirectory $installPath\Astroneer\
+            Stop-Process $proc -Force
+            Write-Host "AstroLauncher should be available at http://localhost:5000"
+        } else {
+            Write-Host "If you need to make changes to the config file, ensure you kill the server first!"
+            Stop-Process $proc -Force
+            Start-Process -FilePath "$installPath\Astroneer\AstroServer.exe" -WorkingDirectory $installPath\Astroneer\
+        }
+    }
+    else {
+        Start-Process -FilePath "$installPath\$nssm_build\win64\nssm.exe" -NoNewWindow -ArgumentList "start $astroServiceName" -Wait -PassThru
     }
 }
+
+Write-Host "Did you know you can offload your backups to a cloud storage with a simple script?"
+Write-Host "Check out https://github.com/alex4108/astroneer-offsite-backups"
 
 if ($noWait) {
     Write-Host "Installation is completed!"
