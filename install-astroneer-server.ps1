@@ -136,7 +136,8 @@ $steamCMDResult = Install-SteamCMD -InstallPath $installPath -Force
 
 Write-Host "Installing ASTRONEER Dedicated Server"
 mkdir $installPath -Force | Out-Null
-"$installPath\steamcmd\steamcmd.exe" +anonymous +force_install_dir $installPath\Astroneer\ +app_update 728470 +quit
+Start-Process -FilePath "$installPath\steamcmd\steamcmd.exe" -NoNewWindow -ArgumentList " +anonymous +force_install_dir $installPath\Astroneer\ +app_update 728470 +quit" -Wait -PassThru
+
 
 $configFile = "$installPath\Astroneer\Astro\Saved\Config\WindowsServer\AstroServerSettings.ini"
 $engineFile = "$installPath\Astroneer\Astro\Saved\Config\WindowsServer\Engine.ini"
@@ -241,7 +242,7 @@ if ($installService -eq $true) {
 
     Invoke-WebRequest -Uri $nssmUrl -OutFile "$installPath\nssm.zip"
     Expand-Archive -Path "$installPath\nssm.zip" -DestinationPath "$installPath"
-    "$installPath\$nssm_build\nssm.exe" install $astroServiceName $pathToAstro 
+    Start-Process -FilePath "$installPath\$nssm_build\nssm.exe" -NoNewWindow -ArgumentList "install $astroServiceName $pathToAstro" -Wait -PassThru
 }
 
 if ($reboot -eq $true) {
@@ -277,7 +278,7 @@ if ($reboot -eq $true) {
         }
     }
     else {
-        "$installPath\$nssm_build\nssm.exe" install $astroServiceName
+        Start-Process -FilePath "$installPath\$nssm_build\nssm.exe" -NoNewWindow -ArgumentList "start $astroServiceName" -Wait -PassThru
     }
 }
 
