@@ -80,7 +80,7 @@ Contributions are what make the open source community such an amazing place to b
 
 # Requirements
 
-This script has been tested on Windows Server 2019 and Windows 10 1909 and Windows 10 2004 using Powershell 5 & Powershell 7.
+This script has been tested on Windows Server 2019 (not compatible with core, see https://github.com/alex4108/AstroInstaller/issues/3) and Windows 10 1909 and Windows 10 2004 using Powershell 5 & Powershell 7.
 
 # Credits
 
